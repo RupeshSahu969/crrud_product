@@ -24,6 +24,19 @@ exports.createItem = async (req, res) => {
     res.status(500).json({ message: 'Error creating item', error: err.message });
   }
 };
+// Get a single item by ID
+exports.getItemById = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.status(200).json(item);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching item', error: err.message });
+  }
+};
+
 
 // Update an existing item
 exports.updateItem = async (req, res) => {

@@ -19,11 +19,28 @@ exports.login = async (req, res) => {
 
 // For development testing only
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body; // Ensure username is provided in the request
+
+  if (!email || !password || !username) {
+    return res.status(400).json({ message: 'Email, password, and username are required' });
+  }
+
   const userExists = await User.findOne({ email });
   if (userExists) return res.status(400).json({ message: 'User already exists' });
 
   const hashed = await bcrypt.hash(password, 10);
-  const user = await User.create({ email, password: hashed });
-  res.status(201).json({ message: 'User created' });
+  const user = new User({ email, password: hashed, username }); // Save username
+
+  try {
+    await user.save();
+    res.status(201).json({ message: 'User created' });
+  } catch (err) {
+    console.error('Error registering user:', err);
+    if (err.code === 11000) {
+      return res.status(400).json({ message: 'User with this email or username already exists' });
+    }
+    res.status(500).json({ message: 'Error registering user', error: err.message });
+  }
 };
+
+
