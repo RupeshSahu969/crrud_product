@@ -1,3 +1,4 @@
+// import Firebase admin SDK
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -17,9 +18,8 @@ exports.login = async (req, res) => {
   res.json({ token, user: { id: user._id, email: user.email } });
 };
 
-// For development testing only
 exports.register = async (req, res) => {
-  const { email, password, username } = req.body; // Ensure username is provided in the request
+  const { email, password, username } = req.body; 
 
   if (!email || !password || !username) {
     return res.status(400).json({ message: 'Email, password, and username are required' });
@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
   if (userExists) return res.status(400).json({ message: 'User already exists' });
 
   const hashed = await bcrypt.hash(password, 10);
-  const user = new User({ email, password: hashed, username }); // Save username
+  const user = new User({ email, password: hashed, username }); 
 
   try {
     await user.save();

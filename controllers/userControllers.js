@@ -1,16 +1,16 @@
-const Item = require('../models/productModel');
+const Item = require("../models/productModel");
 
-// Get all items
 exports.getItems = async (req, res) => {
   try {
     const items = await Item.find();
     res.status(200).json(items);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching items', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching items", error: err.message });
   }
 };
 
-// Create a new item
 exports.createItem = async (req, res) => {
   try {
     const newItem = new Item(req.body);
@@ -18,54 +18,59 @@ exports.createItem = async (req, res) => {
     res.status(201).json(savedItem);
   } catch (err) {
     if (err.code === 11000) {
-      // Duplicate key error (e.g. email already exists)
-      return res.status(400).json({ message: 'Duplicate field value', field: err.keyValue });
+      return res
+        .status(400)
+        .json({ message: "Duplicate field value", field: err.keyValue });
     }
-    res.status(500).json({ message: 'Error creating item', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error creating item", error: err.message });
   }
 };
-// Get a single item by ID
+
 exports.getItemById = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
-      return res.status(404).json({ message: 'Item not found' });
+      return res.status(404).json({ message: "Item not found" });
     }
     res.status(200).json(item);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching item', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching item", error: err.message });
   }
 };
 
-
-// Update an existing item
 exports.updateItem = async (req, res) => {
   try {
-    const updated = await Item.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const updated = await Item.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updated) {
-      return res.status(404).json({ message: 'Item not found' });
+      return res.status(404).json({ message: "Item not found" });
     }
 
     res.status(200).json(updated);
   } catch (err) {
-    res.status(500).json({ message: 'Error updating item', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error updating item", error: err.message });
   }
 };
 
-// Delete an item
 exports.deleteItem = async (req, res) => {
   try {
     const deleted = await Item.findByIdAndDelete(req.params.id);
     if (!deleted) {
-      return res.status(404).json({ message: 'Item not found' });
+      return res.status(404).json({ message: "Item not found" });
     }
-    res.status(200).json({ message: 'Deleted successfully' });
+    res.status(200).json({ message: "Deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: 'Error deleting item', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting item", error: err.message });
   }
 };

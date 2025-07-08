@@ -11,12 +11,12 @@ const connectDB = () => {
     const conn = mongoose.connection;
 
     conn.on("connected", () => {
-      console.log("✅ MongoDB Connected");
-      resolve(); // ← Only resolve when connected
+      console.log("MongoDB Connected");
+      resolve(); 
     });
 
     conn.on("error", (err) => {
-      console.error("❌ MongoDB connection error:", err);
+      console.error("MongoDB connection error:", err);
       reject(err);
     });
   });

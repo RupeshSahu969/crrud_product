@@ -10,10 +10,10 @@ const {
 
 const auth = require('../middleware/authMiddleware');
 
-router.get('/', auth, getItems);
-router.post('/', auth, createItem);
-router.get('/:id', auth, getItemById);
-router.put('/:id', auth, updateItem);
-router.delete('/:id', auth, deleteItem);
+router.get('/', getItems);
+router.post('/',  createItem);
+router.get('/:id',  getItemById);
+router.put('/:id',  updateItem);
+router.delete('/:id',  deleteItem);
 
 module.exports = router;
