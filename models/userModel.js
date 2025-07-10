@@ -23,13 +23,13 @@ const ProductSchema = new mongoose.Schema(
       type: String,
     },
     category: {
-      type: String,
-      required: true,
-    },
-  },
-  {
-    timestamps: true, 
-  }
+  type: String, // Should be a string, not an ObjectId
+  required: true,
+}
+},
+{
+  timestamps: true,
+}
 );
 
 module.exports = mongoose.model('Productdatalist', ProductSchema);
