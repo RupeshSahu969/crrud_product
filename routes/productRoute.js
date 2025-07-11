@@ -1,15 +1,16 @@
 const express = require('express');
 const path = require('path'); 
-const fs = require('fs');     
-const Product = require('../models/userModel');
+const fs = require('fs');
+const {Product} = require('../models/userModel');
 const { singleUpload } = require('../middleware/upload');
-
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const { category } = req.query;
+    const filter = category ? { category } : {}; 
+    const products = await Product.find(filter).sort({ createdAt: -1 });
     res.json(products);
   } catch (err) {
     console.error('Error fetching products:', err);
@@ -17,6 +18,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Fetch product by ID
 router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -58,24 +60,11 @@ router.post('/', singleUpload('image'), async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
-  try {
-    const { category } = req.query;
-    const filter = category ? { category } : {}; // If category is provided, use it for filtering
-
-    const products = await Product.find(filter).sort({ createdAt: -1 });
-    res.json(products);
-  } catch (err) {
-    console.error('Error fetching products:', err);
-    res.status(500).json({ error: 'Failed to fetch products.' });
-  }
-});
-
 
 router.get('/categories', async (req, res) => {
   try {
-    console.log('Fetching categories...');
-    const categories = await Product.distinct('category');
+    console.log('Fetching distinct categories...');
+    const categories = await Product.distinct('category'); 
     console.log('Categories fetched:', categories);
     res.json(categories);
   } catch (err) {
@@ -83,7 +72,6 @@ router.get('/categories', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch categories.' });
   }
 });
-
 
 
 
